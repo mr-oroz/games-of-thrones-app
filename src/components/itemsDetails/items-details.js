@@ -1,21 +1,19 @@
 import React, {Component} from 'react';
-import GotService from '../../services/getServices';
 
-const Field = ({char, field, label}) => {
+const Field = ({item, field, label}) => {
     return (
         <li className='list-group-item d-flex justify-content-between'>
             <span className='term'>{label}</span>
-            <span>{char[field]}</span>
+            <span>{item[field]}</span>
         </li>
     )
 }
 
 export {Field}
 
-class CharDetails extends Component {
-    GotService = new GotService()
+class ItemsDetails extends Component {
     state = {
-        char: null
+        item: null
     }
 
     componentDidMount() {
@@ -23,37 +21,35 @@ class CharDetails extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.charId !== prevProps.charId) {
+        if (this.props.ItemId !== prevProps.ItemId) {
             this.updateChar()
         }
     }
 
     updateChar() {
-        const {charId} = this.props;
-        if (!charId) {
+        const {ItemId, getData} = this.props;
+        if (!ItemId) {
             return;
         }
 
-        this.GotService.getCharacter(charId)
-            .then((char) => {
-                this.setState({char})
+        getData(ItemId)
+            .then((item) => {
+                this.setState({item})
             })
-        // this.foo.bar = 0;
     }
 
-
     render() {
-        if (!this.state.char) {
+        if (!this.state.item) {
             return <span style={{color: 'white'}} className='select-error'>Please select a character</span>
         }
-        const {char} = this.state
-        const {name} = this.state.char
+        const {item} = this.state
+        const {name} = item
         return (
             <ul className='list-group list-group-flush mt-4'>
-                <h4 style={{margin: '0'}} className='list-group-item'> {name === '' ? 'нет данных' : name}</h4>
+                <h4 style={{margin: '0'}} className='list-group-item'> {name}</h4>
                 {
                     React.Children.map(this.props.children, (child) => {
-                        return React.cloneElement(child, {char})
+                        return React.cloneElement(child, {item})
                     })
                 }
             </ul>
@@ -61,4 +57,4 @@ class CharDetails extends Component {
     }
 }
 
-export default CharDetails;
+export default ItemsDetails;

@@ -3,11 +3,18 @@ import './App.css';
 import Header from "./components/header/header";
 import RandomChar from "./components/randomChar/random-char";
 import {Col, Container, Row} from "react-bootstrap";
-import ItemList from "./components/itemList/item-list";
-import CharDetails from "./components/charDetails/char-details";
 import ErrorMessage from "./components/errorMessage/errorMessage";
-import CharacterPage from "./components/characterPage/characterPage";
-import getServices from './services/getServices'
+import CharacterPage from "./components/pages/characterPage";
+import getServices from './services/getServices';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from 'react-router-dom'
+import BooksPage from "./components/pages/BooksPage";
+import HousesPage from "./components/pages/HousesPage";
+import BooksItem from "./components/pages/booksItem";
 
 class App extends Component {
     constructor() {
@@ -28,16 +35,16 @@ class App extends Component {
     }
 
     toggleRandomCharackter = () => {
-        this.setState((state) => {
+        this.setState(({toggle}) => {
             return {
-                toggle: !state.toggle
+                toggle: !toggle
             }
         })
     }
 
 
     render() {
-        const {toggle, selectedChar, error} = this.state;
+        const {toggle, error} = this.state;
         const char = toggle ? <RandomChar/> : null;
         if (error) {
             return <ErrorMessage/>
@@ -49,42 +56,30 @@ class App extends Component {
         </button>;
 
         return (
-            <div>
-                <Header/>
-                <Container>
-                    <Row>
-                        <Col lg={{size: 5, offset: 0}}>
-                            {char}
-                            {toggleButton}
-                        </Col>
-                    </Row>
-                    <CharacterPage/>
-                    <Row>
-                        <Col md={'6'}>
-                            <ItemList
-                                onItemSelected={this.onItemSelected}
-                                getData={this.getServices.getAllBooks}
-                                renderItem={(item) => item.name}
-                            />
-                        </Col>
-                        <Col md={'6'}>
-                            <CharDetails charId={selectedChar}/>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={'6'}>
-                            <ItemList
-                                onItemSelected={this.onItemSelected}
-                                getData={this.getServices.getAllHouses}
-                                renderItem={(item) => item.name}
-                            />
-                        </Col>
-                        <Col md={'6'}>
-                            <CharDetails charId={selectedChar}/>
-                        </Col>
-                    </Row>
-                </Container>
-            </div>
+            <>
+                <Router>
+                    <Header/>
+                    <Container>
+                        <Route path='/'>
+                            <Row>
+                                <Col lg={{size: 5, offset: 0}}>
+                                    {char}
+                                    {toggleButton}
+                                </Col>
+                            </Row>
+                        </Route>
+                        <Route path='/charackters' component={CharacterPage}/>
+                        <Route path='/books' exact component={BooksPage}/>
+                        <Route path='/houses' component={HousesPage}/>
+                        <Route path='/books/:id' render={
+                            ({match}) => {
+                                const {id} = match.params
+                                return <BooksItem bookId={id}/>
+                            }
+                        }/>
+                    </Container>
+                </Router>
+            </>
         );
     }
 }

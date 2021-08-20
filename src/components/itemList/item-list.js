@@ -7,7 +7,6 @@ class ItemList extends Component {
         itemList: null,
     }
 
-
     componentDidMount() {
         const {getData} = this.props;
         getData()
@@ -21,7 +20,6 @@ class ItemList extends Component {
     renderItems(arr) {
         return arr.map((item, i) => {
             const {id} = item;
-            console.log(item)
             const label = this.props.renderItem(item)
             return (
                 <li
@@ -43,7 +41,7 @@ class ItemList extends Component {
 
         const items = this.renderItems(itemList)
         return (
-            <ul className='item list list list-group mt-4'>
+            <ul style={{maxWidth: '500px'}} className='item list list list-group mt-4'>
                 {items}
             </ul>
         );
