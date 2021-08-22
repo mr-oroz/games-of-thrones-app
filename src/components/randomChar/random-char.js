@@ -3,6 +3,7 @@ import './random-char.css';
 import GotService from '../../services/getServices';
 import Spinner from '../spinner/spiner';
 import ErrorMessage from "../errorMessage/errorMessage";
+import PropTypes from 'prop-types';
 
 class RandomChar extends Component {
 
@@ -12,10 +13,9 @@ class RandomChar extends Component {
         loading: true,
         error: false
     }
-
     componentDidMount() {
         this.updateChar()
-        this.timderId = setInterval(this.updateChar, 2000)
+        this.timderId = setInterval(this.updateChar, this.props.interval)
     }
 
     componentWillUnmount() {

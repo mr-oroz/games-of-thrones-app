@@ -45,7 +45,7 @@ class App extends Component {
 
     render() {
         const {toggle, error} = this.state;
-        const char = toggle ? <RandomChar/> : null;
+        const char = toggle ? <RandomChar interval={15000}/> : null;
         if (error) {
             return <ErrorMessage/>
         }
